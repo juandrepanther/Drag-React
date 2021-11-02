@@ -13,6 +13,17 @@ let PROGRAMMING_LIST = [
  { name: 'Laravel', id: 8 },
 ]
 
+let CHECK_LIST = [
+ 'React',
+ 'ASP.NET MVC',
+ 'Angular',
+ 'Ruby on Rails',
+ 'Angular.JS',
+ 'Vue.JS',
+ 'Django',
+ 'Laravel',
+]
+
 export default function App() {
  const [list, setList] = useState(PROGRAMMING_LIST)
  let currentCard = {}
@@ -51,6 +62,19 @@ export default function App() {
   setList(listClone)
  }
 
+ //CHECK ORDER FUNCTION
+ const checkOrderHandler = () => {
+  list.forEach((item, index) => {
+   if (item.name === CHECK_LIST[index]) {
+    const correct = document.getElementById(`${index}`)
+    correct.style.color = 'green'
+   } else {
+    const incorrect = document.getElementById(`${index}`)
+    incorrect.style.color = 'red'
+   }
+  })
+ }
+
  return (
   <div className='app'>
    <div className='list-container'>
@@ -62,6 +86,7 @@ export default function App() {
      {list.map((item, index) => {
       return (
        <div
+        id={index}
         key={index}
         draggable
         onDragStart={() => onDragStart(item)}
@@ -75,6 +100,7 @@ export default function App() {
       )
      })}
     </div>
+    <button onClick={() => checkOrderHandler()}>CHECK ORDER</button>
    </div>
   </div>
  )
