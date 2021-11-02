@@ -1,17 +1,20 @@
-import React from 'react'
-import { useState } from 'react/cjs/react.development'
+import React, { useState } from 'react'
 import './App.css'
 
-let PROGRAMMING_LIST = [
- { name: 'React', id: 1 },
- { name: 'ASP.NET MVC', id: 2 },
- { name: 'Angular', id: 3 },
- { name: 'Ruby on Rails', id: 4 },
- { name: 'Angular.JS', id: 5 },
- { name: 'Vue.JS', id: 6 },
- { name: 'Django', id: 7 },
- { name: 'Laravel', id: 8 },
+let DATA = [
+ 'React',
+ 'ASP.NET MVC',
+ 'Angular',
+ 'Ruby on Rails',
+ 'Angular.JS',
+ 'Vue.JS',
+ 'Django',
+ 'Laravel',
 ]
+const RANDOM_DATA_LIST = DATA.map((item) => ({
+ name: item,
+ id: Math.random(),
+})).sort((a, b) => a.id - b.id)
 
 let CHECK_LIST = [
  'React',
@@ -25,29 +28,28 @@ let CHECK_LIST = [
 ]
 
 export default function App() {
- const [list, setList] = useState(PROGRAMMING_LIST)
+ const [list, setList] = useState(RANDOM_DATA_LIST)
  let currentCard = {}
  let nextCard = {}
 
  //DRAG HANDLERS
 
  const onDragStart = (item) => (currentCard = item)
-
  const onDragEnter = (e) => e.preventDefault()
 
  const onDragLeave = (e) => {
   e.preventDefault()
-  e.target.style.background = ''
+  e.target.style.border = 'none'
  }
 
  const onDragOver = (e) => {
   e.preventDefault()
-  e.target.style.background = 'rgb(115, 102, 204)'
+  e.target.style.border = '2px solid black'
  }
 
  const onDrop = (event, item) => {
   nextCard = item
-  event.target.style.background = ''
+  event.target.style.border = 'none'
   changeItems(list, currentCard, nextCard)
  }
 
@@ -55,8 +57,8 @@ export default function App() {
 
  const changeItems = (list, currentCard, nextCard) => {
   const listClone = [...list]
-  const currentIndex = list.findIndex((el) => el.id === currentCard.id)
-  const nextIndex = list.findIndex((el) => el.id === nextCard.id)
+  const currentIndex = list.findIndex((el) => el.name === currentCard.name)
+  const nextIndex = list.findIndex((el) => el.name === nextCard.name)
   listClone[currentIndex] = nextCard
   listClone[nextIndex] = currentCard
   setList(listClone)
@@ -67,10 +69,10 @@ export default function App() {
   list.forEach((item, index) => {
    if (item.name === CHECK_LIST[index]) {
     const correct = document.getElementById(`${index}`)
-    correct.style.color = 'green'
+    correct.style.background = 'green'
    } else {
     const incorrect = document.getElementById(`${index}`)
-    incorrect.style.color = 'red'
+    incorrect.style.background = 'red'
    }
   })
  }
