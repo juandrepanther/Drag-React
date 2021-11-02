@@ -59,6 +59,12 @@ body {
  display: flex;
  align-items: center;
  padding: 0px 10px;
+ cursor: grab;
+}
+
+.item:hover {
+  transform: scale(1.03);
+  border: 1px solid grey;
 }
 
 .btn-check {
