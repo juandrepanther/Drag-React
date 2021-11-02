@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './App.css'
+import Modal from './components/Modal'
 
 let DATA = [
  'React',
@@ -16,19 +17,12 @@ const RANDOM_DATA_LIST = DATA.map((item) => ({
  id: Math.random(),
 })).sort((a, b) => a.id - b.id)
 
-let CHECK_LIST = [
- 'React',
- 'ASP.NET MVC',
- 'Angular',
- 'Ruby on Rails',
- 'Angular.JS',
- 'Vue.JS',
- 'Django',
- 'Laravel',
-]
-
 export default function App() {
+ //ALL APP STATES
+
  const [list, setList] = useState(RANDOM_DATA_LIST)
+ const [isCompleted, setIsCompleted] = useState(false)
+ const [checkCount, setCheckCount] = useState(1)
  let currentCard = {}
  let nextCard = {}
 
@@ -65,45 +59,59 @@ export default function App() {
  }
 
  //CHECK ORDER FUNCTION
+
  const checkOrderHandler = () => {
+  let correctAnswerCount = 0
+  setCheckCount((prevState) => prevState + 1)
+  console.log(checkCount)
+
   list.forEach((item, index) => {
-   if (item.name === CHECK_LIST[index]) {
+   if (item.name === DATA[index]) {
     const correct = document.getElementById(`${index}`)
-    correct.style.background = 'green'
+    correct.style.background = '#2ECC40'
+    correctAnswerCount += 1
    } else {
     const incorrect = document.getElementById(`${index}`)
-    incorrect.style.background = 'red'
+    incorrect.style.background = '#FF4136'
    }
   })
+
+  //MODAL TRIGGER
+
+  if (correctAnswerCount === DATA.length) setIsCompleted(true)
  }
 
  return (
   <div className='app'>
-   <div className='list-container'>
-    <div className='titles'>
-     <div className='title-main'>Rank of Programming Languages</div>
-     <div className='title-task'>Sort in actual order</div>
+   {isCompleted ? (
+    <Modal countSteps={checkCount} />
+   ) : (
+    <div className='list-container'>
+     <div className='titles'>
+      <div className='title-main'>Rank of Programming Languages</div>
+      <div className='title-task'>Sort in actual order</div>
+     </div>
+     <div className='items-wrapper'>
+      {list.map((item, index) => {
+       return (
+        <div
+         id={index}
+         key={index}
+         draggable
+         onDragStart={() => onDragStart(item)}
+         onDragEnter={(e) => onDragEnter(e)}
+         onDragLeave={(e) => onDragLeave(e)}
+         onDragOver={(e) => onDragOver(e)}
+         onDrop={(e) => onDrop(e, item)}
+         className='item'>
+         {`${index + 1}. ${item.name}`}
+        </div>
+       )
+      })}
+     </div>
+     <button className='btn-check' onClick={() => checkOrderHandler()}>CHECK ORDER</button>
     </div>
-    <div className='items-wrapper'>
-     {list.map((item, index) => {
-      return (
-       <div
-        id={index}
-        key={index}
-        draggable
-        onDragStart={() => onDragStart(item)}
-        onDragEnter={(e) => onDragEnter(e)}
-        onDragLeave={(e) => onDragLeave(e)}
-        onDragOver={(e) => onDragOver(e)}
-        onDrop={(e) => onDrop(e, item)}
-        className='item'>
-        {`${index + 1}. ${item.name}`}
-       </div>
-      )
-     })}
-    </div>
-    <button onClick={() => checkOrderHandler()}>CHECK ORDER</button>
-   </div>
+   )}
   </div>
  )
 }
